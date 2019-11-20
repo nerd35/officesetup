@@ -1,0 +1,25 @@
+body{
+    background-color:#ebedef;
+}
+.App {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.btn-primary{
+  background-color: #321fdb !important;
+}
+.text-right{
+  color: #321fdb !important;
+  margin-left: 120px !important;
+  font-size: 14px;
+}
+.bg-primary{
+    background-color: #321fdb !important;
+}
+.lorem-text{
+    font-size: 14px;
+}
+.register-btn{
+    margin-left: 110px !important;
+}
