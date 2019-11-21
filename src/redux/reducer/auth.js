@@ -1,7 +1,7 @@
 import {
     SET_CURRENT_USER,
     SET_CURRENT_USER_ERROR
-} from '../option';
+} from '../action/types';
 
 const initialState = {
     isAuthenticated: false,

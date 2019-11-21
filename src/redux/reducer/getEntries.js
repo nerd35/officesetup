@@ -3,7 +3,7 @@ import
     GET_ENTRIES,
     IS_LOADING,
     GET_ENTRIES_ERROR
-} from '../option';
+} from '../action/types';
 
 const initialState = {
     entry: {},

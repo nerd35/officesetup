@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css';
+import '../../App.css';
 import { reduxForm } from 'redux-form'
+import PropTypes from 'prop-types';
+import Swal from 'sweetalert2';
+import validateInput from './validations';
+import {userLoginRequest} from '../../redux/action/users/login';
 
 
 
-function Login({}) {
+function LoginForm() {
     const formDefaultValue = {
-        username: "",
+        email: "",
         password: ""
 
     }
     const [formValue, setFormValue] = useState(formDefaultValue);
-    const {username, password} = formValue;
+    const {email, password} = formValue;
 
 
     function handleChange(e) {
@@ -21,6 +25,21 @@ function Login({}) {
             ...prevState,
             [target.name]: target.value
         }))
+    }
+    const { errors } = validateInput(this.state);
+    if (errors.email || errors.password) {
+        this.setState(() => ({
+            errors
+        }));
+        Swal('Oops!', 'Something went wrong!', 'error');
+    } else {
+        userLoginRequest({
+            email,
+            password
+        });
+        this.setState(() => ({
+            errors: {},
+        }));
     }
     return (
         <div className="form-section">
@@ -33,19 +52,31 @@ function Login({}) {
                         <form onSubmit={formDefaultValue} className="form-group">
                             <div className="col-auto">
                                 <div className="input-group mb-2">
+                                    {errors.email
+                                    && (
+                                        <p className="red-text">
+                                            { errors.email }
+                                        </p>
+                                    )}
                                     <div className="input-group-prepend">
                                         <div className="input-group-text"><i className="fas fa-user"></i></div>
                                     </div>
                                     <input type="text"
                                            className="form-control"
                                            placeholder="Username"
-                                           value={username}
-                                           name={"username"}
+                                           value={email}
+                                           name={"email"}
                                            onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="col-auto mt-3">
                                 <div className="input-group mb-2">
+                                    {errors.password
+                                    && (
+                                        <p className="red-text">
+                                            { errors.password }
+                                        </p>
+                                    )}
                                     <div className="input-group-prepend">
                                         <div className="input-group-text"><i className="fas fa-lock"></i></div>
                                     </div>
@@ -76,6 +107,10 @@ function Login({}) {
     );
 }
 
+LoginForm.propTypes = {
+    userLoginRequest: PropTypes.func.isRequired
+};
+
 export default reduxForm({
     form: 'login'
-})(Login)
+})(LoginForm)

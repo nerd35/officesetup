@@ -2,11 +2,10 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import {
     SET_CURRENT_USER,
-    SET_CURRENT_USER_ERROR
-} from '../option';
+    SET_CURRENT_USER_ERROR,
+} from '../types';
+import setAuthToken from '../../utils/setAuthToken';
 
-import setAuthToken from "./setAuthToken";
-import Swal from "sweetalert2";
 
 export const loginUser = user => ({
     type: SET_CURRENT_USER,
@@ -28,13 +27,7 @@ export const userLoginRequest = userDetails => dispatch => axios.post(
         setAuthToken(token);
         dispatch(loginUser(response.data));
     }, (error) => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Login with a valid email or password'
-        });
+        Swal.fire('Oops!', 'Please login with a valid email or password', 'error');
         dispatch(loginUserFailure(error.response));
         return error.response;
     });
-
-
