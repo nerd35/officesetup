@@ -1,22 +1,19 @@
-import Validator from 'validator';
-
-const validateInput = (data) => {
-    const errors = {};
-    const errorMsg = 'This field is required';
-
-    if (Validator.isEmpty(data.email)) {
-        errors.email = errorMsg;
-    } else if (!Validator.isEmail(data.email)) {
-        errors.email = 'Your email is invalid';
+export default function validation(values) {
+    let errors ={};
+    //email error
+    if(!values.email){
+        errors.email = 'Required Email';
+    } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test
+        (values.email)
+    ){
+        errors.email = 'Invalid email address';
     }
-    if (Validator.isEmpty(data.password)) {
-        errors.password = errorMsg;
-    } else if (data.password.length < 6) {
-        errors.password = 'Your password must not be less than 6 characters';
+    //Password errors
+    if (!values.password){
+        errors.password = 'Require Password'
+    } else if (values.password.length < 6 ) {
+        errors.password = 'Password must be at least 6 characters'
     }
-
-    return {
-        errors,
-    };
-};
-export default validateInput;
+    return errors;
+}

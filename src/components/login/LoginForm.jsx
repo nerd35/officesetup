@@ -2,45 +2,17 @@ import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../App.css';
 import { reduxForm } from 'redux-form'
-import PropTypes from 'prop-types';
-import Swal from 'sweetalert2';
-import validateInput from './validations';
-import {userLoginRequest} from '../../redux/action/users/login';
+import useFormValidation from "./useFormValidation";
+import validation from "./validations";
 
-
+const INITIAL_STATE = {
+    email: "",
+    password: ""
+}
 
 function LoginForm() {
-    const formDefaultValue = {
-        email: "",
-        password: ""
+    const { handleSubmit, handleChange, values,handleBlur, errors, isSubmitting} = useFormValidation(INITIAL_STATE, validation);
 
-    }
-    const [formValue, setFormValue] = useState(formDefaultValue);
-    const {email, password} = formValue;
-
-
-    function handleChange(e) {
-        const target = e.target
-        setFormValue (prevState => ({
-            ...prevState,
-            [target.name]: target.value
-        }))
-    }
-    const { errors } = validateInput(this.state);
-    if (errors.email || errors.password) {
-        this.setState(() => ({
-            errors
-        }));
-        Swal('Oops!', 'Something went wrong!', 'error');
-    } else {
-        userLoginRequest({
-            email,
-            password
-        });
-        this.setState(() => ({
-            errors: {},
-        }));
-    }
     return (
         <div className="form-section">
             <h1 className="App"></h1>
@@ -49,48 +21,42 @@ function LoginForm() {
                     <div className="col-lg-4  mt-5 border bg-light">
                         <h2 className="mt-5 ml-3 text-secondary">Login</h2>
                         <p className="ml-3 text-secondary">Sign In to your account</p>
-                        <form onSubmit={formDefaultValue} className="form-group">
+                        <form onSubmit={handleSubmit} className="form-group">
+                            <div className="text-center">{errors.email && <p className="text-danger">{errors.email}</p>}</div>
                             <div className="col-auto">
                                 <div className="input-group mb-2">
-                                    {errors.email
-                                    && (
-                                        <p className="red-text">
-                                            { errors.email }
-                                        </p>
-                                    )}
                                     <div className="input-group-prepend">
                                         <div className="input-group-text"><i className="fas fa-user"></i></div>
                                     </div>
+
                                     <input type="text"
                                            className="form-control"
                                            placeholder="Username"
-                                           value={email}
+                                           value={values.email}
                                            name={"email"}
+                                           onBlur={handleBlur}
                                            onChange={handleChange}/>
                                 </div>
                             </div>
+
+                            <div className="text-center">{errors.password && <p className="text-danger">{errors.password}</p>}</div>
                             <div className="col-auto mt-3">
                                 <div className="input-group mb-2">
-                                    {errors.password
-                                    && (
-                                        <p className="red-text">
-                                            { errors.password }
-                                        </p>
-                                    )}
                                     <div className="input-group-prepend">
                                         <div className="input-group-text"><i className="fas fa-lock"></i></div>
                                     </div>
                                     <input type="text"
                                            className="form-control"
-                                           Value={password}
+                                           value={values.password}
                                            name={"password"}
                                            placeholder="Password"
+                                           onBlur={handleBlur}
                                            onChange={handleChange}
                                     />
                                 </div>
                             </div>
                             <div className="mb-5 mt-3">
-                                <button type="submit" className="ml-3 btn-primary btn border-0">Login</button>
+                                <button disabled={isSubmitting} type="submit" className="ml-3 btn-primary btn border-0">Login</button>
                                 <a href="#" className="text-right">Forgot password?</a>
                             </div>
                         </form>
@@ -107,9 +73,7 @@ function LoginForm() {
     );
 }
 
-LoginForm.propTypes = {
-    userLoginRequest: PropTypes.func.isRequired
-};
+
 
 export default reduxForm({
     form: 'login'
