@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import {
     SET_CURRENT_USER,
     SET_CURRENT_USER_ERROR,
@@ -17,17 +16,22 @@ export const loginUserFailure = error => ({
     error
 });
 
-export const userLoginRequest = userDetails => dispatch => axios.post(
-    'http://voomsway-webapi.herokuapp.com/api/v1',
-    userDetails
-)
-    .then((response) => {
-        const { token } = response.data;
-        localStorage.setItem('jwtToken', token);
-        setAuthToken(token);
-        dispatch(loginUser(response.data));
-    }, (error) => {
-        Swal.fire('Oops!', 'Please login with a valid email or password', 'error');
-        dispatch(loginUserFailure(error.response));
-        return error.response;
-    });
+export const userLoginRequest = userDetails => dispatch => {
+    console.log('userDetails: ', userDetails);
+    return axios.post(
+        'http://voomsway-webapi.herokuapp.com/api/v1/login',
+        userDetails,
+        { headers: { 'x-api-key': 'Voomsway'} }
+    )
+        .then((response) => {
+            const { token } = response.data;
+            localStorage.setItem('jwtToken', token);
+            setAuthToken(token);
+            dispatch(loginUser(response.data));
+        }, (error) => {
+            console.log('error: ', error);
+            alert('Oops! Please login with a valid email or password error');
+            dispatch(loginUserFailure(error.response));
+            return error.response;
+        });
+}

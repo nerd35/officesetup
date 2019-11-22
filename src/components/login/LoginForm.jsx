@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../App.css';
 import { reduxForm } from 'redux-form'
@@ -8,14 +8,18 @@ import validation from "./validations";
 const INITIAL_STATE = {
     email: "",
     password: ""
-}
+};
 
-function LoginForm() {
+function LoginForm(props) {
     const { handleSubmit, handleChange, values,handleBlur, errors, isSubmitting} = useFormValidation(INITIAL_STATE, validation);
+
+    if (isSubmitting && Object.entries(errors).length === 0 && errors.constructor === Object) {
+        const { userLoginRequest } = props;
+        userLoginRequest(values);
+    }
 
     return (
         <div className="form-section">
-            <h1 className="App"></h1>
             <div className="container">
                 <div className="row justify-content-center mt-5">
                     <div className="col-lg-4  mt-5 border bg-light">
@@ -45,7 +49,7 @@ function LoginForm() {
                                     <div className="input-group-prepend">
                                         <div className="input-group-text"><i className="fas fa-lock"></i></div>
                                     </div>
-                                    <input type="text"
+                                    <input type="password"
                                            className="form-control"
                                            value={values.password}
                                            name={"password"}
@@ -57,7 +61,7 @@ function LoginForm() {
                             </div>
                             <div className="mb-5 mt-3">
                                 <button disabled={isSubmitting} type="submit" className="ml-3 btn-primary btn border-0">Login</button>
-                                <a href="#" className="text-right">Forgot password?</a>
+                                <a href="LoginForm.jsx" className="text-right">Forgot password?</a>
                             </div>
                         </form>
                     </div>

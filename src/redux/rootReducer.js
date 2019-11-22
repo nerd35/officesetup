@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import auth from './reducer/auth';
-import getEntries from './reducer/getEntries';
+import getProfileReducer from './reducer/getProfileReducer';
 
 export default combineReducers({
     auth,
-    getEntriesReducer: getEntries
+    getEntriesReducer: getProfileReducer
 });
